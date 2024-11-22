@@ -1,0 +1,11 @@
+{
+    "player_name": "",
+    "play_time": "00:00:00",
+    "level": 1,
+    "position": {
+        "x": 200,
+        "y": 100
+    },
+    "inventory": [],
+    "health": 100
+}
