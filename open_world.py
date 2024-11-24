@@ -7,7 +7,7 @@ from settings import show_menu, key_config
 from save_manager import load_save_data, get_selected_save_slot
 from episode0_0 import *
 from variables import *
-from player_data import update_player_data
+from player_data import *
 
 
 
