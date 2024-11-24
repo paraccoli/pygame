@@ -36,6 +36,35 @@ pip install -r requirements.txt
 python main.py
 ```
 
+# RPG Game Project
+
+## Overview
+
+This project is an RPG game engine developed using Python and Pygame.
+Players can control their own characters and progress through a rich storyline.
+
+### Main Features
+- Episode-based story progression
+- Real-time combat system
+- Customizable characters
+- Save & Load functionality
+- Map editor feature
+
+## Requirements
+
+- Python 3.8 or higher
+- Pygame 2.0.0 or higher
+- Recommended resolution: 1920x1080
+
+## Installation and Execution
+
+1. Clone the repository
+```sh
+git clone https://github.com/paraccoli/pygame.git
+cd pygame
+```
+
+
 ## プロジェクト構造
 
 ```
