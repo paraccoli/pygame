@@ -2,9 +2,6 @@
 import pygame
 import sys
 from config import FONT_PATH, screen, SCREEN_WIDTH, SCREEN_HEIGHT
-from save_manager import save_game, get_selected_save_slot
-from player_data import player_name, play_time, player_level, player_position, player_inventory, player_health
-
 # グローバル変数の初期化
 bgm_volume = 0.5
 se_volume = 0.5
@@ -20,7 +17,8 @@ key_config = {
     "pickup": pygame.K_e,
     "map": pygame.K_m,
     "attack": pygame.K_SPACE,
-    "back": pygame.K_ESCAPE
+    "back": pygame.K_ESCAPE,
+    "save": pygame.K_s
 }
 
 def draw_slider(label, value, position):
@@ -44,7 +42,7 @@ def draw_key_icon(screen, key_name, position, width=50):
     screen.blit(key_text, (position[0] + (width - key_text.get_width()) // 2, position[1] + (50 - key_text.get_height()) // 2))
 
 def show_menu(screen):
-    menu_options = ["オプション", "ゲームを続ける", "ゲームを保存する", "ゲームを終了する"]
+    menu_options = ["オプション", "ゲームを続ける", "ゲームを終了する"]
     font = pygame.font.Font(FONT_PATH, 48)
     selected_option = 0
     running = True
@@ -52,10 +50,9 @@ def show_menu(screen):
         screen.fill((0, 0, 0))
 
         option_positions = [
-            (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 150),
-            (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 50),
-            (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 50),
-            (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 150)
+            (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 100),
+            (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2),
+            (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 100)
         ]
 
         for i, option in enumerate(menu_options):
@@ -78,27 +75,7 @@ def show_menu(screen):
                         show_options(screen)
                     elif selected_option == 1:  # ゲームを続ける
                         running = False
-                    elif selected_option == 2:  # ゲームを保存する
-                        selected_save_slot = get_selected_save_slot()
-                        save_data = {
-                            "player_name": player_name,
-                            "play_time": play_time,
-                            "level": player_level,
-                            "position": player_position,
-                            "inventory": player_inventory,
-                            "health": player_health
-                        }
-                        save_game(f'save/save_{selected_save_slot}.json', save_data)
-                        # 画面を黒にして保存完了メッセージを表示
-                        screen.fill((0, 0, 0))
-                        font = pygame.font.Font(FONT_PATH, 48)
-                        save_text = font.render("保存しました", True, (255, 255, 255))
-                        save_text_rect = save_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
-                        screen.blit(save_text, save_text_rect)
-                        pygame.display.flip()
-                        pygame.time.wait(2000)  # 2秒待つ
-                        running = False
-                    elif selected_option == 3:  # ゲームを終了する
+                    elif selected_option == 2:  # ゲームを終了する
                         pygame.quit()
                         sys.exit()
 
@@ -206,8 +183,8 @@ def adjust_brightness(screen):
 
 def configure_keys(screen):
     global key_config
-    keys = ["up", "down", "left", "right", "pickup", "map", "attack", "back"]
-    key_labels = ["上", "下", "左", "右", "取得", "マップ", "攻撃", "戻る"]
+    keys = ["up", "down", "left", "right", "pickup", "map", "attack", "save", "back"]
+    key_labels = ["上", "下", "左", "右", "取得", "マップ", "攻撃", "保存", "戻る"]
     font = pygame.font.Font(FONT_PATH, 48)
     selected_key = 0
     waiting_for_key = False

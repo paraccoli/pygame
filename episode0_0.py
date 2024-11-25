@@ -253,7 +253,11 @@ def dialogue_model(screen, map_data, tiles, dialogue_manager):
             photo_image = pygame.transform.scale(photo_image, (180, 180))
             screen.blit(photo_image, (dialogue_box_x + 10, dialogue_box_y + 10))
         elif current_dialogue.startswith(f"{player_name}の父："):
-            photo_image = pygame.image.load('characters/icons/00004.png')
+            photo_image = pygame.image.load('characters/icons/00010.png')
+            photo_image = pygame.transform.scale(photo_image, (180, 180))
+            screen.blit(photo_image, (dialogue_box_x + 10, dialogue_box_y + 10))
+        elif current_dialogue.startswith("オーク："):
+            photo_image = pygame.image.load('characters/icons/00009.png')
             photo_image = pygame.transform.scale(photo_image, (180, 180))
             screen.blit(photo_image, (dialogue_box_x + 10, dialogue_box_y + 10))
 

@@ -4,11 +4,10 @@ import math
 import time
 from config import SCREEN_WIDTH, SCREEN_HEIGHT, screen
 from settings import show_menu, key_config
-from save_manager import load_save_data, get_selected_save_slot
+from save_manager import *
 from episode0_0 import *
 from variables import *
 from player_data import *
-
 
 
 # Pygameの初期化
@@ -58,7 +57,19 @@ def open_world(screen):
     else:
         character_x = 350
         player_position = {"x": character_x, "y": character_y}  # 初期位置を設定
-    
+    # プレイヤー名をセーブデータから取得
+    if "player_name" in save_data:
+        player_name = save_data["player_name"]
+    # プレイヤーレベルをセーブデータから取得
+    if "level" in save_data:
+        player_level = save_data["level"]
+    # プレイヤーインベントリをセーブデータから取得
+    if "inventory" in save_data:
+        player_inventory = save_data["inventory"]
+    # プレイヤーヘルスをセーブデータから取得
+    if "health" in save_data:
+        player_health = save_data["health"]
+
 
 
     # メインループ
@@ -127,6 +138,25 @@ def open_world(screen):
                     handle_heart_pickup(character_x, character_y)
                 elif event.key == pygame.K_z:
                     show_city_name_flag = True
+                elif event.key == key_config["save"]:  # Sキーでセーブ
+                    selected_save_slot = get_selected_save_slot()
+                    save_data = {
+                        "player_name": player_name,
+                        "play_time": play_time,
+                        "level": player_level,
+                        "position": player_position,
+                        "inventory": player_inventory,
+                        "health": player_health
+                    }
+                    save_game(f'save/save_{selected_save_slot}.json', save_data)
+                    # 画面を黒にして保存完了メッセージを表示
+                    screen.fill((0, 0, 0))
+                    font = pygame.font.Font(FONT_PATH, 48)
+                    save_text = font.render("保存しました", True, (255, 255, 255))
+                    save_text_rect = save_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
+                    screen.blit(save_text, save_text_rect)
+                    pygame.display.flip()
+                    pygame.time.wait(2000)  # 2秒待つ
             elif event.type == pygame.KEYUP:
                 if event.key == key_config["right"]:
                     key_pressed["right"] = False

@@ -137,12 +137,12 @@ for i, option in enumerate(QUIT_OPTIONS.keys()):
     option_rects2.append(text_rect2)
 
 # セーブデータの読み込み関数
-def save_game_data(selected_slot, player_name, play_time="0000:00:00", level=1):
+def save_game_data(selected_slot, player_name, play_time="0000:00:00", player_level=1):
     file_path = os.path.join("save", f"save_{selected_slot}.json")
     save_data = {
         "player_name": player_name,
         "play_time": play_time,
-        "level": level
+        "player_level": player_level
     }
     with open(file_path, "w", encoding='utf-8') as f:
         json.dump(save_data, f)
@@ -372,7 +372,7 @@ def create_save_data():
                 slot_infos.append({
                     "player_name": save_data.get("player_name", ""),
                     "play_time": save_data.get("play_time", "0000:00:00"),
-                    "level": save_data.get("level", 1),
+                    "player_level": save_data.get("player_level", 1),
                 })
 
                 # スロット番号テキスト
@@ -400,11 +400,11 @@ def create_save_data():
                 )
 
                 # レベルテキスト
-                level_text = font.render("レベル: {}".format(save_data.get("level", 1)), True, (0, 0, 0))
-                level_text_rect = level_text.get_rect()
-                level_text_rect.topright = (
+                player_level_text = font.render("レベル: {}".format(save_data.get("player_level", 1)), True, (0, 0, 0))
+                player_level_text_rect = player_level_text.get_rect()
+                player_level_text_rect.topright = (
                     slot_rect.right - SLOT_INFO_MARGIN,
-                    slot_rect.bottom - SLOT_INFO_MARGIN - level_text_rect.height,
+                    slot_rect.bottom - SLOT_INFO_MARGIN - player_level_text_rect.height,
                 )
 
                 # 各要素を描画
@@ -412,7 +412,7 @@ def create_save_data():
                 screen.blit(slot_number_text, slot_number_text_rect)
                 screen.blit(player_name_text, player_name_text_rect)
                 screen.blit(play_time_text, play_time_text_rect)
-                screen.blit(level_text, level_text_rect)
+                screen.blit(player_level_text, player_level_text_rect)
 
             # 選択中のスロットを強調表示
             if slot_state == 0:
@@ -615,19 +615,19 @@ def continue_game():
                 save_data = load_save_data(file_path)
                 player_name = save_data.get("player_name", "空きスロット")
                 play_time = save_data.get("play_time", "00:00:00")
-                level = save_data.get("level", 1)
+                player_level = save_data.get("player_level", 1)
             else:
                 player_name = "空きスロット"
                 play_time = "00:00:00"
-                level = 1
+                player_level = 1
 
             # スロット情報を描画
             slot_text = font.render(f"スロット {i + 1}: {player_name}", True, (0, 0, 0))
             play_time_text = font.render(f"プレイ時間: {play_time}", True, (0, 0, 0))
-            level_text = font.render(f"レベル: {level}", True, (0, 0, 0))
+            player_level_text = font.render(f"レベル: {player_level}", True, (0, 0, 0))
             screen.blit(slot_text, (slot_rect.x + SLOT_INFO_MARGIN, slot_rect.y + SLOT_INFO_MARGIN))
             screen.blit(play_time_text, (slot_rect.x + SLOT_INFO_MARGIN, slot_rect.y + SLOT_INFO_MARGIN + 50))
-            screen.blit(level_text, (slot_rect.x + SLOT_INFO_MARGIN, slot_rect.y + SLOT_INFO_MARGIN + 100))
+            screen.blit(player_level_text, (slot_rect.x + SLOT_INFO_MARGIN, slot_rect.y + SLOT_INFO_MARGIN + 100))
 
         # 選択中のスロットを強調表示
         selected_slot_rect = pygame.Rect(
