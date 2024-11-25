@@ -54,9 +54,19 @@ def open_world(screen):
         player_position = save_data["position"]
         character_x = player_position["x"]
         character_y = player_position["y"]
+        # 移動可能なエリアを取得
+        passable_areas = get_passable_areas(map_data)
+        # プレイヤーの初期位置が移動可能なエリア内にあるか確認
+        if (character_x, character_y) not in passable_areas:
+            # 近くの移動可能なエリアを探す
+            closest_passable_area = min(passable_areas, key=lambda pos: math.hypot(pos[0] - character_x, pos[1] - character_y))
+            character_x, character_y = closest_passable_area[0], closest_passable_area[1]
+            player_position = {"x": character_x, "y": character_y}
     else:
         character_x = 350
         player_position = {"x": character_x, "y": character_y}  # 初期位置を設定
+
+
     # プレイヤー名をセーブデータから取得
     if "player_name" in save_data:
         player_name = save_data["player_name"]
@@ -89,8 +99,6 @@ def open_world(screen):
     animation_counter = 0  # アニメーション速度を制御するためのカウンター
     current_attack_images = attack_images1  # 現在の攻撃アニメーション
     attack_direction = 'right'  # プレイヤーの攻撃方向を追加
-    passable_areas = get_passable_areas(map_data)  # 移動可能なエリアを取得
-
     # キー入力の状態を管理する変数
     key_pressed = {
         "up": False,
