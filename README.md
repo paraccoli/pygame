@@ -1,3 +1,8 @@
+README.mdファイルを更新し、現在の機能と今後の目標を追加します。
+
+### 更新後のREADME.md
+
+```markdown
 # RPGゲームプロジェクト
 
 ## 概要
@@ -11,6 +16,11 @@
 - カスタマイズ可能なキャラクター
 - セーブ＆ロード機能
 - マップエディタ機能
+- インベントリシステム
+- アイテムドロップと取得
+- 敵キャラクターのリスポーン
+- ミニマップ表示
+- 体力バーと敵の体力表示
 
 ## 必要環境
 
@@ -49,6 +59,11 @@ Players can control their own characters and progress through a rich storyline.
 - Customizable characters
 - Save & Load functionality
 - Map editor feature
+- Inventory system
+- Item drop and pickup
+- Enemy respawn
+- Minimap display
+- Health bar and enemy health display
 
 ## Requirements
 
@@ -64,6 +79,15 @@ git clone https://github.com/paraccoli/pygame.git
 cd pygame
 ```
 
+2. Install dependencies
+```sh
+pip install -r requirements.txt
+```
+
+3. Run the game
+```sh
+python main.py
+```
 
 ## プロジェクト構造
 
@@ -86,12 +110,36 @@ cd pygame
 ### コアファイル
 | ファイル名 | 説明 |
 |------------|------|
-| main.py | ゲームのエントリーポイントとメインループ |
-| config.py | 環境設定と定数の定義 |
-| game_logic.py | コアゲームロジックの実装 |
-| dialogue_manager.py | 会話システムの管理 |
-| field_create.py | マップエディタツール |
-| save_manager.py | セーブデータの管理システム |
+| 
+
+main.py
+
+ | ゲームのエントリーポイントとメインループ |
+| 
+
+config.py
+
+ | 環境設定と定数の定義 |
+| 
+
+game_logic.py
+
+ | コアゲームロジックの実装 |
+| 
+
+dialogue_manager.py
+
+ | 会話システムの管理 |
+| 
+
+field_create.py
+
+ | マップエディタツール |
+| 
+
+save_manager.py
+
+ | セーブデータの管理システム |
 
 ### エピソードファイル
 - episode0.py: プロローグ
@@ -104,13 +152,14 @@ cd pygame
 - [ ] 戦闘システムの改善
 - [ ] 新規エピソード2件の追加
 - [ ] UIの改善
-
-### 中期目標（20xx～）
-- [ ] マルチプレイヤー機能の実装
-- [ ] キャラクターカスタマイズの拡充
 - [ ] アイテム合成システムの導入
 
-### 長期目標（20xx年〜）
+### 中期目標（2025年〜2026年）
+- [ ] マルチプレイヤー機能の実装
+- [ ] キャラクターカスタマイズの拡充
+- [ ] 新しい敵キャラクターの追加
+
+### 長期目標（2026年〜）
 - [ ] オンラインランキングシステム
 - [ ] モバイルアプリ版のリリース
 - [ ] コミュニティ作成コンテンツのサポート
@@ -124,13 +173,15 @@ cd pygame
 3. ドキュメントの改善
 4. 新規アセットの提供
 
-
 ## 開発者向け情報
-
 
 ## 連絡先
 X：[パラッコリー🥦](https://x.com/Paraccoli)
 Gmail：m.mirim1357@gmail.com
 
 ---
+
 最終更新日: 2024年11月22日
+
+バージョン: v0.1.2
+```
