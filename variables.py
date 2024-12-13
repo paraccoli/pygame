@@ -16,6 +16,9 @@ ATTACK_RANGE = 50  # 攻撃範囲を50ピクセルに設定
 hearts = []  # ハートのドロップリスト
 clock = pygame.time.Clock()  # クロックオブジェクトを作成
 
+NUM_FIRE_BALL_IMAGES = 4  # ファイアボールの画像の数を定義
+NUM_EXPLOSION_IMAGES = 4  # 爆発の画像の数を定義
+
 
 # 初期体力の設定
 health = 100
@@ -47,22 +50,22 @@ def load_images(path, count, size):
 
 
 # アイドル状態の画像をロード
-idle_images = load_images('characters/Soldier/Soldier_Idle/Soldier-Idle', 6, (CHARACTER_SIZE, CHARACTER_SIZE))
+idle_images = load_images('characters/Friends/Soldier/Soldier_Idle/Soldier-Idle', 6, (CHARACTER_SIZE, CHARACTER_SIZE))
 # 歩行状態の画像をロード
-walk_images = load_images('characters/Soldier/Soldier_Walk/Soldier-Walk', 8, (CHARACTER_SIZE, CHARACTER_SIZE))
+walk_images = load_images('characters/Friends/Soldier/Soldier_Walk/Soldier-Walk', 8, (CHARACTER_SIZE, CHARACTER_SIZE))
 # 攻撃状態の画像をロード
-attack_images1 = load_images('characters/Soldier/Soldier_Attack_1/Soldier-Attack', 6, (CHARACTER_SIZE, CHARACTER_SIZE))
-attack_images2 = load_images('characters/Soldier/Soldier_Attack_2/Soldier-Attack', 6, (CHARACTER_SIZE, CHARACTER_SIZE))
+attack_images1 = load_images('characters/Friends/Soldier/Soldier_Attack_1/Soldier-Attack', 6, (CHARACTER_SIZE, CHARACTER_SIZE))
+attack_images2 = load_images('characters/Friends/Soldier/Soldier_Attack_2/Soldier-Attack', 6, (CHARACTER_SIZE, CHARACTER_SIZE))
 # 攻撃を受けた状態の画像をロード
-hurt_images = load_images('characters/Soldier/Soldier_Hurt/Soldier-Hurt', 4, (CHARACTER_SIZE, CHARACTER_SIZE))
+hurt_images = load_images('characters/Friends/Soldier/Soldier_Hurt/Soldier-Hurt', 4, (CHARACTER_SIZE, CHARACTER_SIZE))
 # 死亡状態の画像をロード
-death_images = load_images('characters/Soldier/Soldier_Death/Soldier-Death', 4, (CHARACTER_SIZE, CHARACTER_SIZE))
+death_images = load_images('characters/Friends/Soldier/Soldier_Death/Soldier-Death', 4, (CHARACTER_SIZE, CHARACTER_SIZE))
 # Orcの画像をロード
-orc_idle_images = load_images('characters/Orc/Orc_Idle/Orc-Idle', 6, (CHARACTER_SIZE, CHARACTER_SIZE))
-orc_walk_images = load_images('characters/Orc/Orc_Walk/Orc-Walk', 8, (CHARACTER_SIZE, CHARACTER_SIZE))
-orc_attack_images = load_images('characters/Orc/Orc_Attack/Orc-Attack', 6, (CHARACTER_SIZE, CHARACTER_SIZE))
-orc_hurt_images = load_images('characters/Orc/Orc_Hurt/Orc-Hurt', 4, (CHARACTER_SIZE, CHARACTER_SIZE))
-orc_death_images = load_images('characters/Orc/Orc_Death/Orc-Death', 4, (CHARACTER_SIZE, CHARACTER_SIZE))
+orc_idle_images = load_images('characters/Enemy/Orc/Orc_Idle/Orc-Idle', 6, (CHARACTER_SIZE, CHARACTER_SIZE))
+orc_walk_images = load_images('characters/Enemy/Orc/Orc_Walk/Orc-Walk', 8, (CHARACTER_SIZE, CHARACTER_SIZE))
+orc_attack_images = load_images('characters/Enemy/Orc/Orc_Attack/Orc-Attack', 6, (CHARACTER_SIZE, CHARACTER_SIZE))
+orc_hurt_images = load_images('characters/Enemy/Orc/Orc_Hurt/Orc-Hurt', 4, (CHARACTER_SIZE, CHARACTER_SIZE))
+orc_death_images = load_images('characters/Enemy/Orc/Orc_Death/Orc-Death', 4, (CHARACTER_SIZE, CHARACTER_SIZE))
 # ハートのアニメーションをロード
 heart_images = load_images('Texture/Heart/Heart-Pickup', 6, (12, 12))
 # 体力バーの画像をロード
@@ -75,6 +78,10 @@ health_meter_full = pygame.image.load('Texture/HealthMeter/health meter-42.png')
 health_meter_empty = pygame.image.load('Texture/HealthMeter/health meter-36.png')
 health_meter_full = pygame.transform.scale(health_meter_full, (312, 33))
 health_meter_empty = pygame.transform.scale(health_meter_empty, (393, 105))
+
+# ファイアボールの画像をロード
+fire_ball_images = load_images('magic/fire_ball/fire_ball', 3, (32, 32))
+explosion_images = load_images('magic/fire_ball/explosion', 3, (32, 32))
 
 tileset_filenames = [f"Texture/Grand/object{i}.png" for i in range(1, 15)]
 tile_sizes = [

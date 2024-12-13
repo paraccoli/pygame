@@ -5,6 +5,8 @@
 
 
 import pygame
+from config import FONT_PATH, SCREEN_WIDTH, SCREEN_HEIGHT
+
 
 class DialogueManager:
     def __init__(self, font_path, screen_height, font_size=48):  # フォントサイズを大きくする
@@ -41,3 +43,28 @@ class DialogueManager:
 
     def skip_to_end(self):
         self.current_dialogue_index = len(self.dialogues) - 1
+
+def dialogue(screen, text):
+    dialogue_manager = DialogueManager(FONT_PATH, SCREEN_HEIGHT, font_size=24)
+    dialogue_manager.add_dialogue(text)
+
+    dialogue_box_rect = pygame.Rect(0, SCREEN_HEIGHT - 100, SCREEN_WIDTH, 100)
+    dialogue_box = pygame.Surface((SCREEN_WIDTH, 100))
+    dialogue_box.fill((0, 0, 0))
+    dialogue_box.set_alpha(200)
+
+    running = True
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            dialogue_manager.handle_event(event)
+
+        screen.blit(dialogue_box, dialogue_box_rect.topleft)
+        dialogue_manager.draw(screen, dialogue_box_rect)
+        pygame.display.flip()
+
+        if dialogue_manager.is_finished():
+            running = False
+
+    pygame.time.wait(2000)  # 2秒間表示

@@ -7,8 +7,11 @@ import random
 from dialogue_manager import DialogueManager
 from config import FONT_PATH, SCREEN_WIDTH, SCREEN_HEIGHT, screen
 from settings import show_menu, key_config
+from game_over import game_over
 from save_manager import load_save_data, get_selected_save_slot
 from variables import *
+from draw_utils import draw_image, draw_animated_image
+
 
 # Pygameの初期化
 pygame.init()
@@ -253,7 +256,11 @@ def dialogue_model(screen, map_data, tiles, dialogue_manager):
             photo_image = pygame.transform.scale(photo_image, (180, 180))
             screen.blit(photo_image, (dialogue_box_x + 10, dialogue_box_y + 10))
         elif current_dialogue.startswith(f"{player_name}の父："):
-            photo_image = pygame.image.load('characters/icons/00004.png')
+            photo_image = pygame.image.load('characters/icons/00010.png')
+            photo_image = pygame.transform.scale(photo_image, (180, 180))
+            screen.blit(photo_image, (dialogue_box_x + 10, dialogue_box_y + 10))
+        elif current_dialogue.startswith("オーク："):
+            photo_image = pygame.image.load('characters/icons/00009.png')
             photo_image = pygame.transform.scale(photo_image, (180, 180))
             screen.blit(photo_image, (dialogue_box_x + 10, dialogue_box_y + 10))
 
@@ -380,31 +387,6 @@ def fourth_dialogue(screen, map_data, tiles):
         dialogue_manager.add_dialogue(dialogue)
 
     dialogue_model(screen, map_data, tiles, dialogue_manager)
-
-# ゲームオーバー関数
-def game_over(show_main_menu):
-    # フェードアウト処理
-    for alpha in range(0, 256, 5):
-        fade_surface = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
-        fade_surface.fill((0, 0, 0))
-        fade_surface.set_alpha(alpha)
-        screen.blit(fade_surface, (0, 0))
-        pygame.display.flip()
-        pygame.time.wait(50)  # フェードアウトの速度を調整
-    # GAME OVERのテキストを表示
-    try:
-        font = pygame.font.Font(FONT_PATH, 100)  # 指定されたフォントを使用
-    except FileNotFoundError:
-        print(f"Font file not found: {FONT_PATH}")
-        font = pygame.font.Font(None, 100)  # フォントが見つからない場合はデフォルトフォントを使用
-
-    text = font.render("GAME OVER", True, (255, 0, 0))  # 赤い文字で描画
-    text_rect = text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
-    screen.blit(text, text_rect)
-    pygame.display.flip()
-    # 3秒待つ
-    pygame.time.wait(3000)
-    show_main_menu()  # main.pyのshow_main_menu()に戻る
 
 # デバック用のキャラクター座標を描画する関数
 def draw_character_coordinates(screen, x, y):
@@ -623,93 +605,61 @@ def episode0_0():
             is_hurt = False
 
         if is_dead:
-            if flip_image:
-                death_image = pygame.transform.flip(death_images[death_index], True, False)
-            else:
-                death_image = death_images[death_index]
-
-            screen.blit(death_image, (character_x, character_y))
+            draw_animated_image(screen, death_images, death_index, character_x, character_y, flip_image)
             if animation_counter % ANIMATION_SPEED == 0:
                 death_index += 1
                 if death_index >= len(death_images):
                     game_over()
         else:
-            if is_walking and not is_attacking:  # 攻撃中でない場合のみ移動
+            if is_walking and not is_attacking:
                 new_x = character_x + move_x_direction * MOVE_SPEED
                 new_y = character_y + move_y_direction * MOVE_SPEED
-                # マップ外に出ないように制御
                 if 0 <= new_x <= SCREEN_WIDTH - CHARACTER_SIZE and 0 <= new_y <= SCREEN_HEIGHT - CHARACTER_SIZE:
-                    # キャラクターの矩形を定義
                     character_rect = pygame.Rect(new_x, new_y, CHARACTER_SIZE, CHARACTER_SIZE)
-                    # 衝突判定
-                    collision = True  # デフォルトで衝突とする
+                    collision = True
                     for rect in passable_areas:
                         if character_rect.colliderect(rect):
-                            collision = False  # 赤い部分に衝突した場合は移動可能
+                            collision = False
                             break
                     if not collision:
                         character_x = new_x
                         character_y = new_y
-
-                if flip_image:
-                    walk_image = pygame.transform.flip(walk_images[walk_index], True, False)
-                else:
-                    walk_image = walk_images[walk_index]
-
-                screen.blit(walk_image, (character_x, character_y))
+                draw_animated_image(screen, walk_images, walk_index, character_x, character_y, flip_image)
                 if animation_counter % ANIMATION_SPEED == 0:
                     walk_index = (walk_index + 1) % len(walk_images)
             elif is_attacking:
-                if flip_image:
-                    attack_image = pygame.transform.flip(current_attack_images[attack_index], True, False)
-                else:
-                    attack_image = current_attack_images[attack_index]
-
-                screen.blit(attack_image, (character_x, character_y))
+                draw_animated_image(screen, current_attack_images, attack_index, character_x, character_y, flip_image)
                 if animation_counter % ANIMATION_SPEED == 0:
                     attack_index += 1
                     if attack_index >= len(current_attack_images):
                         is_attacking = False
-                        # プレイヤーの攻撃が当たったかどうかをチェック
                         for orc in orcs:
                             if is_attack_hit(character_x, character_y, orc['x'], orc['y'], attack_direction):
-                                orc['hp'] -= 10  # HPを減らす
+                                orc['hp'] -= 10
                                 if orc['hp'] <= 0:
                                     orc['state'] = 'death'
                                     orc['death_index'] = 0
                                 else:
                                     orc['state'] = 'hurt'
             elif is_hurt:
-                if flip_image:
-                    hurt_image = pygame.transform.flip(hurt_images[hurt_index], True, False)
-                else:
-                    hurt_image = hurt_images[hurt_index]
-
-                screen.blit(hurt_image, (character_x, character_y))
+                draw_animated_image(screen, hurt_images, hurt_index, character_x, character_y, flip_image)
                 if animation_counter % ANIMATION_SPEED == 0:
                     hurt_index += 1
                     if hurt_index >= len(hurt_images):
                         is_hurt = False
             else:
-                if flip_image:
-                    idle_image = pygame.transform.flip(idle_images[idle_index], True, False)
-                else:
-                    idle_image = idle_images[idle_index]
-
-                screen.blit(idle_image, (character_x, character_y))
+                draw_animated_image(screen, idle_images, idle_index, character_x, character_y, flip_image)
                 if animation_counter % ANIMATION_SPEED == 0:
                     idle_index = (idle_index + 1) % len(idle_images)
 
-        # Orcの動作を更新
         for orc in orcs:
             orc_x, orc_y = orc['x'], orc['y']
             distance_to_player = math.hypot(character_x - orc_x, character_y - orc_y)
-
-            if orc['state'] != 'attack' and orc['state'] != 'hurt' and orc['state'] != 'death':  # 攻撃中およびダメージ中でない場合のみ状態を変更
+            if orc['state'] != 'attack' and orc['state'] != 'hurt' and orc['state'] != 'death':
                 if distance_to_player < ORC_ATTACK_RADIUS:
                     orc['state'] = 'attack'
-                    orc['attack_index'] = 0  # 攻撃アニメーションの開始
-                    orc['attack_direction'] = 'right' if character_x > orc_x else 'left'  # 攻撃方向を設定
+                    orc['attack_index'] = 0
+                    orc['attack_direction'] = 'right' if character_x > orc_x else 'left'
                 elif distance_to_player < ORC_DETECTION_RADIUS:
                     orc['state'] = 'walk'
                 else:
@@ -717,95 +667,57 @@ def episode0_0():
 
             if orc['state'] == 'walk':
                 handle_orc_movement(orc, character_x, character_y, passable_areas)
-
-                if orc['flip_image']:
-                    orc_walk_image = pygame.transform.flip(orc_walk_images[orc['walk_index']], True, False)
-                else:
-                    orc_walk_image = orc_walk_images[orc['walk_index']]
-                
-                screen.blit(orc_walk_image, (orc['x'], orc['y']))
+                draw_animated_image(screen, orc_walk_images, orc['walk_index'], orc['x'], orc['y'], orc['flip_image'])
                 if animation_counter % ORC_ANIMATION_SPEED == 0:
                     orc['walk_index'] = (orc['walk_index'] + 1) % len(orc_walk_images)
             elif orc['state'] == 'attack':
-                if orc['flip_image']:
-                    orc_attack_image = pygame.transform.flip(orc_attack_images[orc['attack_index']], True, False)
-                else:
-                    orc_attack_image = orc_attack_images[orc['attack_index']]
-                
-                screen.blit(orc_attack_image, (orc['x'], orc['y']))
+                draw_animated_image(screen, orc_attack_images, orc['attack_index'], orc['x'], orc['y'], orc['flip_image'])
                 if animation_counter % (ORC_ANIMATION_SPEED * ORC_ATTACK_FREQUENCY) == 0:
                     orc['attack_index'] += 1
                     if orc['attack_index'] >= len(orc_attack_images):
-                        orc['state'] = 'idle'  # 攻撃アニメーションが終了したら移動可能にする
+                        orc['state'] = 'idle'
                     else:
-                        # 攻撃アニメーションの特定のフレームでのみダメージを与える
-                        if orc['attack_index'] == 4:  # 攻撃アニメーションの4フレーム目でダメージを与える
+                        if orc['attack_index'] == 4:
                             if is_attack_hit(orc['x'], orc['y'], character_x, character_y, orc['attack_direction']):
-                                if not is_hurt and not is_dead:  # プレイヤーが攻撃を受けていない場合のみダメージ処理
+                                if not is_hurt and not is_dead:
                                     is_hurt = True
                                     hurt_index = 0
-                                    health -= 10  # HPを10減らす
+                                    health -= 10
                                     if health < 0:
                                         health = 0
             elif orc['state'] == 'hurt':
-                if orc['flip_image']:
-                    orc_hurt_image = pygame.transform.flip(orc_hurt_images[orc['hurt_index']], True, False)
-                else:
-                    orc_hurt_image = orc_hurt_images[orc['hurt_index']]
-
-                screen.blit(orc_hurt_image, (orc['x'], orc['y']))
+                draw_animated_image(screen, orc_hurt_images, orc['hurt_index'], orc['x'], orc['y'], orc['flip_image'])
                 if animation_counter % ORC_ANIMATION_SPEED == 0:
                     orc['hurt_index'] += 1
                     if orc['hurt_index'] >= len(orc_hurt_images):
                         orc['state'] = 'idle'
                         orc['hurt_index'] = 0
             elif orc['state'] == 'death':
-                if orc['flip_image']:
-                    orc_death_image = pygame.transform.flip(orc_death_images[orc['death_index']], True, False)
-                else:
-                    orc_death_image = orc_death_images[orc['death_index']]
-                
-                screen.blit(orc_death_image, (orc['x'], orc['y']))
+                draw_animated_image(screen, orc_death_images, orc['death_index'], orc['x'], orc['y'], orc['flip_image'])
                 if animation_counter % ANIMATION_SPEED == 0:
                     orc['death_index'] += 1
                     if orc['death_index'] >= len(orc_death_images):
-                        orcs.remove(orc)  # 死亡アニメーションが終了したらOrcを削除
-                        drop_heart(orc['x'], orc['y'])  # ハートをドロップ
-
+                        orcs.remove(orc)
+                        drop_heart(orc['x'], orc['y'])
             else:
-                if orc['flip_image']:
-                    orc_idle_image = pygame.transform.flip(orc_idle_images[orc['idle_index']], True, False)
-                else:
-                    orc_idle_image = orc_idle_images[orc['idle_index']]
-                
-                screen.blit(orc_idle_image, (orc['x'], orc['y']))
+                draw_animated_image(screen, orc_idle_images, orc['idle_index'], orc['x'], orc['y'], orc['flip_image'])
                 if animation_counter % ORC_ANIMATION_SPEED == 0:
                     orc['idle_index'] = (orc['idle_index'] + 1) % len(orc_idle_images)
 
-        # プレイヤーから一番近いOrcを取得
         closest_orc = get_closest_orc(character_x, character_y, orcs)
-
-        # 一番近いOrcのHPを表示
         if closest_orc:
             hp_percentage = closest_orc['hp'] / 100
             health_meter_width = health_meter_full.get_width()
             health_meter_height = health_meter_full.get_height()
             current_health_width = int(health_meter_width * hp_percentage)
-            
-            # 空のHPメーターを描画
             screen.blit(health_meter_empty, (SCREEN_WIDTH - health_meter_width - 100, 10))
-            
-            # 現在のHPを描画
             screen.blit(health_meter_full, (SCREEN_WIDTH - health_meter_width - 44, 23), (0, 0, current_health_width, health_meter_height))
 
-        # 体力バーを描画
         screen.blit(health_bar_bg, (150, 10))
         current_health_width = int(health_bar_fg.get_width() * (health / 100))
         screen.blit(health_bar_fg, (192, 32), (0, 0, current_health_width, health_bar_fg.get_height()))
 
-        # ミニマップを描画
         pygame.draw.circle(screen, (255, 0, 0), minimap_position, minimap_radius, 2)
-        # ミニマップの内容を描画（ここでは仮にキャラクターの位置を示す点を描画）
         pygame.draw.circle(screen, (0, 255, 0), minimap_position, 5)
 
         animation_counter += 1

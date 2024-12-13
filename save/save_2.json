@@ -1,11 +1,22 @@
 {
-    "player_name": "",
-    "play_time": "00:00:00",
+    "player_name": "Paraccoli",
+    "play_time": "00:00:28",
     "level": 1,
     "position": {
-        "x": 200,
-        "y": 100
+        "x": 443,
+        "y": 205
     },
-    "inventory": [],
-    "health": 100
+    "inventory": [
+        "weapon-3",
+        "weapon-4",
+        "weapon-6",
+        "weapon-12",
+        "weapon-11",
+        "weapon-10",
+        "weapon-8",
+        "weapon-7",
+        "weapon-1"
+    ],
+    "health": 100,
+    "zenny": 32450
 }
