@@ -126,6 +126,7 @@ def start_episode0(screen):
                 dialogue_manager.skip_to_end()
                 skip_timer = 0
                 episode0_music.fadeout(2000)
+                pygame.time.wait(2000)
                 running = False
             else:
                 angle = (elapsed_time / skip_duration) * 360

@@ -654,6 +654,7 @@ def continue_game():
                         with open('save/selected_save_slot.json', 'w') as f:
                             json.dump({"selected_slot": selected_slot + 1}, f)
                         # ゲームを続ける
+                        opening_music.fadeout(2500)  # 音楽をフェードアウト
                         open_world(screen)
                         running = False
 

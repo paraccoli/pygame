@@ -18,7 +18,9 @@ key_config = {
     "map": pygame.K_m,
     "attack": pygame.K_SPACE,
     "back": pygame.K_ESCAPE,
-    "save": pygame.K_s
+    "save": pygame.K_s,
+    "magic": pygame.K_g,
+    "inventory": pygame.K_i
 }
 
 def draw_slider(label, value, position):
@@ -183,8 +185,8 @@ def adjust_brightness(screen):
 
 def configure_keys(screen):
     global key_config
-    keys = ["up", "down", "left", "right", "pickup", "map", "attack", "save", "back"]
-    key_labels = ["上", "下", "左", "右", "取得", "マップ", "攻撃", "保存", "戻る"]
+    keys = ["up", "down", "left", "right", "pickup", "map", "attack", "magic", "inventory","save", "back"]
+    key_labels = ["上", "下", "左", "右", "取得", "マップ", "攻撃", "魔法", "持ち物","保存", "戻る"]
     font = pygame.font.Font(FONT_PATH, 48)
     selected_key = 0
     waiting_for_key = False
