@@ -106,36 +106,12 @@ python main.py
 ### コアファイル
 | ファイル名 | 説明 |
 |------------|------|
-| 
-
-main.py
-
- | ゲームのエントリーポイントとメインループ |
-| 
-
-config.py
-
- | 環境設定と定数の定義 |
-| 
-
-game_logic.py
-
- | コアゲームロジックの実装 |
-| 
-
-dialogue_manager.py
-
- | 会話システムの管理 |
-| 
-
-field_create.py
-
- | マップエディタツール |
-| 
-
-save_manager.py
-
- | セーブデータの管理システム |
+| main.py | ゲームのエントリーポイントとメインループ |
+| config.py | 環境設定と定数の定義 |
+| game_logic.py | コアゲームロジックの実装 |
+| dialogue_manager.py | 会話システムの管理 |
+| field_create.py | マップエディタツール |
+| save_manager.py | セーブデータの管理システム |
 
 ### エピソードファイル
 - episode0.py: プロローグ
